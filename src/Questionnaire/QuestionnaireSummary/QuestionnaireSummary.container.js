@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-const SummaryPage = () => (
+const QuestionnaireSummaryContainer = () => (
 	<div>
 		<h1 className="saturn">Your responses</h1>
 		<div className="print__message panel panel--simple panel--error">
@@ -50,4 +50,4 @@ const SummaryPage = () => (
 	</div>
 );
 
-export default SummaryPage;
+export default QuestionnaireSummaryContainer;
