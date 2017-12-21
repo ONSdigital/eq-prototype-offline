@@ -4,7 +4,8 @@ import EventEmitter from 'events';
  * Deep-mutable store
  */
 let currentState = {
-	surveySchema: null
+	surveySchema: null,
+	answers: []
 };
 
 const emitter = new EventEmitter();

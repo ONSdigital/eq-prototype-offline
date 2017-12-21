@@ -25,7 +25,7 @@ const QuestionnaireSummaryContainer = () => (
 							data-ga-category="Summary"
 							data-ga="click"
 							data-ga-action="Edit click"
-							to='/survey'>
+							to='/questionnaire/1'>
 							Edit <span className="u-vh">your answer</span>
 						</Link>
 					</div>
@@ -46,7 +46,7 @@ const QuestionnaireSummaryContainer = () => (
 			data-ga-category="Navigation"
 			data-ga="click"
 			data-ga-action="Previous link click"
-			to='/survey'>Previous</Link>
+			to='/questionnaire/1'>Previous</Link>
 	</div>
 );
 

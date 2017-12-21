@@ -9,9 +9,13 @@ const QuestionComponent = (props) => (
 			<div className="question__answers">
 				<div className="question__answer">
 
-					{props.question.answers.map((answer) => {
+					{props.question.answers.map((answerMetadata) => {
 						return (
-							<AnswerComponent key={answer.id} answer={answer} />
+							<AnswerComponent
+								key={answerMetadata.id}
+								answerMetadata={answerMetadata}
+								existingAnswer={(props.groupBlockAnswers || []).find((item) => item.answer_id === answerMetadata.id)}
+								onUpdate={props.onUpdateAnswer.bind(null, answerMetadata.id)} />
 						);
 					})}
 
