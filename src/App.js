@@ -17,6 +17,10 @@ class App extends Component {
   constructor (props) {
     super(props);
 
+    this.state = {
+			isReady: false
+    };
+
 		QuestionnaireClientStorageService.createStore({
       name: 'ONS - Electronic Questionnaire',
       version: 2,
@@ -28,10 +32,18 @@ class App extends Component {
 				appStore.set({
 					surveySchema: data
 				});
+
+				this.setState({
+					isReady: true
+        });
 			});
   }
 
   render() {
+		if (!this.state.isReady) {
+			return null;
+		}
+
     return (
       <div className="page">
         <div className="page__content">

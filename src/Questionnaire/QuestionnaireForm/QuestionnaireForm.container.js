@@ -1,46 +1,39 @@
 import React, { Component } from 'react';
 
 import appStore from '../../App.store';
+import { fetchExistingAnswersByGroup } from '../utils';
 import GroupComponent from '../../shared/Group/Group.component';
 import BlockComponent from '../../shared/Block/Block.component';
 import QuestionComponent from '../../shared/Question/Question.component';
 
 import QuestionnaireClientStorageService from '../Questionnaire.storage';
 
-const initialState = {
-	groups: []
-};
-
 export default class QuestionnaireFormContainer extends Component {
 
 	constructor (props) {
 		super(props);
 
-		this.state = initialState;
 		this.isReady = false;
 
-		if (appStore.get().surveySchema) {
-			this.state = {
-				groups: appStore.get().surveySchema.groups,
-				groupBlockAnswers: []
-			};
+		this.state = {
+			groups: appStore.get().surveySchema ? appStore.get().surveySchema.groups : [],
+			groupBlockAnswers: []
+		};
+
+		if (!this.state.groups.length) {
+			appStore.emitter.on('STATE_CHANGED', () => {
+				const currentGroups = appStore.get().surveySchema.groups;
+
+				this.setState({
+					groups: currentGroups
+				});
+
+				fetchExistingAnswersByGroup(currentGroups).then(this.handleFetchExistingAnswers.bind(this));
+			});
 		}
-
-		appStore.emitter.on('STATE_CHANGED', () => {
-			const currentGroups = appStore.get().surveySchema.groups;
-
-			this.setState({
-				groups: currentGroups
-			});
-
-			currentGroups.forEach((group) => {
-				group.blocks.forEach((block) => {
-					if (block.type === 'Questionnaire') {
-						this.fetchExistingAnswers(group.id, block.id);
-					}
-				})
-			});
-		});
+		else {
+			fetchExistingAnswersByGroup(this.state.groups).then(this.handleFetchExistingAnswers.bind(this));
+		}
 	}
 
 	handleSubmit (e) {
@@ -66,16 +59,12 @@ export default class QuestionnaireFormContainer extends Component {
 			});
 	}
 
-	fetchExistingAnswers (groupId, blockId) {
+	handleFetchExistingAnswers (answerList) {
+		this.isReady = true;
 
-		QuestionnaireClientStorageService.getAnswersByGroupIdByBlockId(groupId, blockId)
-			.then((answerList) => {
-				this.isReady = true;
-
-				this.setState({
-					groupBlockAnswers: answerList
-				});
-			});
+		this.setState({
+			groupBlockAnswers: answerList
+		});
 	}
 
 	render () {
@@ -86,6 +75,7 @@ export default class QuestionnaireFormContainer extends Component {
 		return (
 			<form className="form qa-questionnaire-form" role="form" method="POST" onSubmit={this.handleSubmit.bind(this)}>
 
+				{/* horrible - don't look */}
 				{this.state.groups.map((group) => {
 					return (
 						<GroupComponent key={group.id}>
