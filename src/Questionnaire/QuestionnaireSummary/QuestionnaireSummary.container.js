@@ -38,10 +38,11 @@ export default class QuestionnaireSummaryContainer extends React.Component {
 	}
 
 	handleFetchExistingAnswersForBlock (block, answerList) {
-
 		let newSummaryItems = [ ...this.state.summaryItems ];
 
-		newSummaryItems.push(this.createSummaryItem(block.questions[0].answers[0], answerList[0]));
+		if (answerList.length) {
+			newSummaryItems.push(this.createSummaryItem(block.questions[0].answers[0], answerList[0]));
+		}
 
 		this.setState({
 			isReady: true,
@@ -50,9 +51,12 @@ export default class QuestionnaireSummaryContainer extends React.Component {
 	}
 
 	fetchAnswersForEachBlockInGroups (groups) {
+
 		iterateGroupsBlocks(groups, (group, block) => {
 			if (block.type === 'Questionnaire') {
-				QuestionnaireClientStorageService.getAnswersByGroupIdByBlockId(group.id, block.id)
+
+				QuestionnaireClientStorageService
+					.getAnswersByGroupIdByBlockId(group.id, block.id)
 					.then(this.handleFetchExistingAnswersForBlock.bind(this, block));
 			}
 		});

@@ -57,7 +57,7 @@ const FooterComponent = () => (
 							<br />
 						</div>
 						<div className="dl__data mars">
-							<img src="/s/img/ogl.svg?q=c1b276d0c327c792ee3c44a21f88187f18e594ad" className="ogl__img" />
+							{/*<img src="/s/img/ogl.svg?q=c1b276d0c327c792ee3c44a21f88187f18e594ad" className="ogl__img" />*/}
 							All content is available under
 							the <a className="footer2__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open
 							Government Licence v3.0</a>, except where otherwise stated

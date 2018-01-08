@@ -5,9 +5,9 @@ const SummaryComponent = (props) => (
 	<div className="summary">
 		<div className="summary__block">
 
-			{props.items.map((summaryItem) => {
+			{props.items.map((summaryItem, i) => {
 				return (
-					<div className="summary__items">
+					<div className="summary__items" key={i + '-summary-item'}>
 						<div className="summary__question" id="question">
 							{summaryItem.answerLabel}
 						</div>

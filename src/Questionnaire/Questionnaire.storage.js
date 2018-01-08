@@ -55,13 +55,15 @@ function saveAnswer (answerObj) {
 				newAnswers.push(answerObj);
 			}
 
-			return store.setItem(answerStoreKey, newAnswers)
+			return store
+				.setItem(answerStoreKey, newAnswers)
 				.then(() => store.getItem(answerStoreKey));
 		});
 }
 
 function getAnswersByGroupIdByBlockId (groupId, blockId) {
-	return store.getItem(answerStoreKey)
+	return store
+		.getItem(answerStoreKey)
 		.then((answers) => (answers || []).filter((item) => {
 			return item.group_id === groupId && item.block_id === blockId;
 		}));
