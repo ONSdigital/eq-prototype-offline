@@ -6,24 +6,35 @@ export default class TextAreaComponent extends React.Component {
 		super(props);
 
 		this.state = {
-			charactersRemaining: this.props.answerMetadata.max_length || 0,
+			charactersRemaining: this.props.existingAnswer
+				? this.getCharactersRemaining(this.props.existingAnswer.value)
+				: this.props.answerMetadata.max_length,
+
 			value: this.props.existingAnswer ? this.props.existingAnswer.value : ''
 		};
 	}
 
-	update (e) {
-		this.updateCharactersRemaining(e);
+	update (val) {
+		this.updateCharactersRemaining(val);
 
 		this.props.onUpdate({
-			value: e.target.value
+			value: val
 		});
 
-		this.state.value = e.target.value;
+		this.state.value = val;
 	}
 
-	updateCharactersRemaining (e) {
+	textChange_handler (e) {
+		this.update(e.target.value);
+	}
+
+	getCharactersRemaining (val) {
+		return parseInt(this.props.answerMetadata.max_length) - parseInt(val.length);
+	}
+
+	updateCharactersRemaining (val) {
 		this.setState({
-			charactersRemaining: parseInt(this.props.answerMetadata.max_length) - parseInt(e.target.value.length)
+			charactersRemaining: this.getCharactersRemaining(val)
 		});
 	}
 
@@ -34,7 +45,7 @@ export default class TextAreaComponent extends React.Component {
 					<div className="label__inner">{this.props.answerMetadata.label}</div>
 				</label>
 				<textarea
-					onChange={evt => this.update(evt)}
+					onChange={evt => this.textChange_handler(evt)}
 					maxLength={this.props.answerMetadata.max_length}
 					className="input input--textarea"
 					cols="60"

@@ -13,6 +13,8 @@ export default class QuestionnaireFormContainer extends Component {
 	constructor (props) {
 		super(props);
 
+		window.scrollTo(0, 0);
+
 		this.isReady = false;
 
 		this.state = {

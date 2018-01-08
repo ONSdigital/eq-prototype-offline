@@ -12,6 +12,8 @@ export default class QuestionnaireSummaryContainer extends React.Component {
 	constructor (props) {
 		super(props);
 
+		window.scrollTo(0, 0);
+
 		this.state = {
 			groupsData: appStore.get().surveySchema ? appStore.get().surveySchema.groups : [],
 
