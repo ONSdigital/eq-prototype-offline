@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import './responsive.min.css';
+import './missing-sdc-pattern-library-styles.css';
 import QuestionnaireFormContainer from './Questionnaire/QuestionnaireForm/QuestionnaireForm.container';
 import QuestionnaireSummaryContainer from './Questionnaire/QuestionnaireSummary/QuestionnaireSummary.container';
 import FooterComponent from './shared/Footer/Footer.component';

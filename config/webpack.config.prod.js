@@ -314,7 +314,7 @@ module.exports = {
         }
         console.log(message);
       },
-      minify: true,
+      // minify: true,
       // For unknown URLs, fallback to the index page
       navigateFallback: publicUrl + '/index.html',
       // Ignores URLs starting from /__ (useful for Firebase):
@@ -323,10 +323,20 @@ module.exports = {
       // Don't precache sourcemaps (they're large) and build asset manifest:
       staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
 
+      verbose: true,
+
       runtimeCaching: [{
-				urlPattern: 'survey-schema.json',
-				handler: 'networkFirst'
-			}]
+        urlPattern: 'survey-schema.json',
+        handler: 'networkFirst'
+      },
+
+      /**
+       * Works for external CDN dependencies
+       */
+      {
+        urlPattern: /^https:\/\/cdn\.ons\.gov\.uk\/sdc/,
+        handler: 'networkFirst'
+      }]
     }),
     // Moment.js is an extremely popular library that bundles large locale files
     // by default due to how Webpack interprets its code. This is a practical

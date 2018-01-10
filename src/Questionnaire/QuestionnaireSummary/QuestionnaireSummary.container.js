@@ -18,6 +18,7 @@ export default class QuestionnaireSummaryContainer extends React.Component {
 			groupsData: appStore.get().surveySchema ? appStore.get().surveySchema.groups : [],
 
 			isReady: false,
+			isOnline: navigator.onLine,
 			summaryItems: []
 		};
 
@@ -27,29 +28,9 @@ export default class QuestionnaireSummaryContainer extends React.Component {
 		else {
 			this.fetchAnswersForEachBlockInGroups(this.state.groupsData);
 		}
-	}
 
-	handleAppStateChange () {
-		const currentGroups = appStore.get().surveySchema.groups;
-
-		this.setState({
-			groupsData: currentGroups
-		});
-
-		this.fetchAnswersForEachBlockInGroups(currentGroups);
-	}
-
-	handleFetchExistingAnswersForBlock (block, answerList) {
-		let newSummaryItems = [ ...this.state.summaryItems ];
-
-		if (answerList.length) {
-			newSummaryItems.push(this.createSummaryItem(block.questions[0].answers[0], answerList[0]));
-		}
-
-		this.setState({
-			isReady: true,
-			summaryItems: newSummaryItems
-		});
+		window.addEventListener('online',  this.handleOnlineStatusChange.bind(this));
+		window.addEventListener('offline', this.handleOnlineStatusChange.bind(this));
 	}
 
 	fetchAnswersForEachBlockInGroups (groups) {
@@ -71,7 +52,49 @@ export default class QuestionnaireSummaryContainer extends React.Component {
 		}
 	}
 
-	render() {
+	updateOnlineStatus (bool) {
+		this.setState({
+			isOnline: bool
+		});
+	}
+
+	handleAppStateChange () {
+		const currentGroups = appStore.get().surveySchema.groups;
+
+		this.setState({
+			groupsData: currentGroups
+		});
+
+		this.fetchAnswersForEachBlockInGroups(currentGroups);
+	}
+
+	handleFetchExistingAnswersForBlock (block, answerList) {
+		let newSummaryItems = [ ...this.state.summaryItems ];
+
+		if (answerList.length) {
+
+			answerList.forEach((answer) => {
+				newSummaryItems.push(this.createSummaryItem(block.questions[0].answers[0], answer));
+			});
+		}
+
+		this.setState({
+			isReady: true,
+			summaryItems: newSummaryItems
+		});
+	}
+
+	handleOnlineStatusChange (e) {
+		this.updateOnlineStatus(e.type === 'online');
+	}
+
+	handleSubmit (e) {
+		e.preventDefault();
+
+		alert('Answers would be submitted if the service was available.');
+	}
+
+	render () {
 		if (!this.state.isReady) {
 			return null;
 		}
@@ -88,12 +111,24 @@ export default class QuestionnaireSummaryContainer extends React.Component {
 
 				<SummaryComponent items={this.state.summaryItems} />
 
-				<form className="form qa-questionnaire-form" role="form" method="POST" autoComplete="off" noValidate="">
-					<input id="csrf_token" name="csrf_token" type="hidden"
-					  value="IjYxMTU0ZjYzYzEzMmY5MWU4OGMzMWVmZTkwNjg5ZjVmYzkyMjhiNDUi.DRp0VA.V8MY8f1_1PyTZJDNSCVqVjDA50M"/>
-					<button className="btn btn--primary btn--lg btn--loader js-btn-submit" data-qa="btn-submit"
-						data-loading-msg="Submitting…" type="submit">Submit answers
-					</button>
+				<br />
+
+				<form
+					className="form qa-questionnaire-form"
+					role="form"
+					method="POST"
+					autoComplete="off"
+					noValidate=""
+					onSubmit={this.handleSubmit.bind(this)}>
+
+					{!this.state.isOnline && <p>Connect to the Internet to submit your answers.</p>}
+					<button
+						disabled={!this.state.isOnline || !this.state.summaryItems.length}
+						className={'btn btn--lg btn--loader ' +
+							((this.state.isOnline && this.state.summaryItems.length) ? 'btn--primary' : 'btn--neutral')}
+						data-qa="btn-submit"
+						data-loading-msg="Submitting…" type="submit">Submit answers</button>
+
 					{/*<div className="u-mb-m">
 					<button className="btn btn--link mars js-btn-save" data-qa="btn-save-sign-out" type="submit" name="action[save_sign_out]" data-ga-category="Navigation" data-ga="click" data-ga-action="Save and complete later click">Save and complete later</button>
 				</div>*/}

@@ -38,12 +38,6 @@ export default class QuestionnaireFormContainer extends Component {
 		}
 	}
 
-	handleSubmit (e) {
-		e.preventDefault();
-
-		this.props.history.push("/questionnaire/summary");
-	}
-
 	updateAnswer (groupId, blockId, answerId, valueObj) {
 
 		let answer = {
@@ -67,6 +61,12 @@ export default class QuestionnaireFormContainer extends Component {
 		this.setState({
 			groupBlockAnswers: answerList
 		});
+	}
+
+	handleSubmit (e) {
+		e.preventDefault();
+
+		this.props.history.push("/questionnaire/summary");
 	}
 
 	render () {
