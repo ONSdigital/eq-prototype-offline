@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
 
 import './missing-sdc-pattern-library-styles.css';
-import QuestionnaireFormContainer from './Questionnaire/QuestionnaireForm/QuestionnaireForm.container';
-import QuestionnaireSummaryContainer from './Questionnaire/QuestionnaireSummary/QuestionnaireSummary.container';
 import FooterComponent from './shared/Footer/Footer.component';
 import HeaderComponent from './shared/Header/Header.component';
 
-import QuestionnaireService from './Questionnaire/Questionnaire.service';
+import questionnaireModule from './Questionnaire';
 import appStore from './App.store';
 
-import QuestionnaireClientStorageService from './Questionnaire/Questionnaire.storage';
+import appRoutes from './app.routes';
 
 class App extends Component {
 
@@ -21,13 +18,13 @@ class App extends Component {
 			isReady: false
     };
 
-		QuestionnaireClientStorageService.createStore({
+		questionnaireModule.QuestionnaireClientStorageService.createStore({
       name: 'ONS - Electronic Questionnaire',
       version: 2,
       storeName: 'ons-eq',
     });
 
-		QuestionnaireService.retrieve()
+		questionnaireModule.QuestionnaireService.retrieve()
 			.then((data) => {
 				appStore.set({
 					surveySchema: data
@@ -63,12 +60,7 @@ class App extends Component {
             <div className="grid__col col-7@m pull-1@m">
 
               <main role="main" id="main" className="page_main">
-
-                <Switch>
-                  <Route path="/questionnaire/1" component={QuestionnaireFormContainer} />
-                  <Route path="/questionnaire/summary" component={QuestionnaireSummaryContainer} />
-                </Switch>
-
+								{appRoutes}
               </main>
 
             </div>
