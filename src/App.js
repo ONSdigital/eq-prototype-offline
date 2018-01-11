@@ -36,7 +36,7 @@ class App extends Component {
 			});
   }
 
-  render() {
+  render () {
 		if (!this.state.isReady) {
 			return null;
 		}
